@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HireDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CarFactory">
+    <Key>
+      <PropertyRef Name="FactoryID" />
+    </Key>
+    <Property Name="FactoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FactoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Factories" FromRole="CarFactories" ToRole="Cars" />
+  </EntityType>
+  <EntityType Name="Car">
+    <Key>
+      <PropertyRef Name="CarID" />
+    </Key>
+    <Property Name="CarID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CarNumber" Type="Int32" Nullable="false" />
+    <Property Name="GovernorateID" Type="Int32" Nullable="false" />
+    <Property Name="FactoryID" Type="Int32" Nullable="false" />
+    <Property Name="Model" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="CarFactory" Relationship="Self.FK_Cars_Factories" FromRole="Cars" ToRole="CarFactories" />
+    <NavigationProperty Name="Governorate" Relationship="Self.FK_Cars_Governorates" FromRole="Cars" ToRole="Governorates" />
+    <NavigationProperty Name="Pictures" Relationship="Self.FK_Pictures_Cars" FromRole="Cars" ToRole="Pictures" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="CompanyID" />
+    </Key>
+    <Property Name="CompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Phone" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Governorate">
+    <Key>
+      <PropertyRef Name="GovernorateID" />
+    </Key>
+    <Property Name="GovernorateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GovernorateName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Governorates" FromRole="Governorates" ToRole="Cars" />
+    <NavigationProperty Name="HireCenters" Relationship="Self.FK_HireCenter_Governorates" FromRole="Governorates" ToRole="HireCenters" />
+  </EntityType>
+  <EntityType Name="HireCenter">
+    <Key>
+      <PropertyRef Name="CenterID" />
+    </Key>
+    <Property Name="CenterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GovernorateID" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Governorate" Relationship="Self.FK_HireCenter_Governorates" FromRole="HireCenters" ToRole="Governorates" />
+  </EntityType>
+  <EntityType Name="Picture">
+    <Key>
+      <PropertyRef Name="PictureID" />
+    </Key>
+    <Property Name="PictureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PicturePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CarID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Car" Relationship="Self.FK_Pictures_Cars" FromRole="Pictures" ToRole="Cars" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Cars_Factories">
+    <End Role="CarFactories" Type="Self.CarFactory" Multiplicity="1" />
+    <End Role="Cars" Type="Self.Car" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CarFactories">
+        <PropertyRef Name="FactoryID" />
+      </Principal>
+      <Dependent Role="Cars">
+        <PropertyRef Name="FactoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Cars_Governorates">
+    <End Role="Governorates" Type="Self.Governorate" Multiplicity="1" />
+    <End Role="Cars" Type="Self.Car" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Governorates">
+        <PropertyRef Name="GovernorateID" />
+      </Principal>
+      <Dependent Role="Cars">
+        <PropertyRef Name="GovernorateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Pictures_Cars">
+    <End Role="Cars" Type="Self.Car" Multiplicity="1" />
+    <End Role="Pictures" Type="Self.Picture" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cars">
+        <PropertyRef Name="CarID" />
+      </Principal>
+      <Dependent Role="Pictures">
+        <PropertyRef Name="CarID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_HireCenter_Governorates">
+    <End Role="Governorates" Type="Self.Governorate" Multiplicity="1" />
+    <End Role="HireCenters" Type="Self.HireCenter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Governorates">
+        <PropertyRef Name="GovernorateID" />
+      </Principal>
+      <Dependent Role="HireCenters">
+        <PropertyRef Name="GovernorateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HireDbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CarFactories" EntityType="Self.CarFactory" />
+    <EntitySet Name="Cars" EntityType="Self.Car" />
+    <EntitySet Name="Companies" EntityType="Self.Company" />
+    <EntitySet Name="Governorates" EntityType="Self.Governorate" />
+    <EntitySet Name="HireCenters" EntityType="Self.HireCenter" />
+    <EntitySet Name="Pictures" EntityType="Self.Picture" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Cars_Factories" Association="Self.FK_Cars_Factories">
+      <End Role="CarFactories" EntitySet="CarFactories" />
+      <End Role="Cars" EntitySet="Cars" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Cars_Governorates" Association="Self.FK_Cars_Governorates">
+      <End Role="Governorates" EntitySet="Governorates" />
+      <End Role="Cars" EntitySet="Cars" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Pictures_Cars" Association="Self.FK_Pictures_Cars">
+      <End Role="Cars" EntitySet="Cars" />
+      <End Role="Pictures" EntitySet="Pictures" />
+    </AssociationSet>
+    <AssociationSet Name="FK_HireCenter_Governorates" Association="Self.FK_HireCenter_Governorates">
+      <End Role="Governorates" EntitySet="Governorates" />
+      <End Role="HireCenters" EntitySet="HireCenters" />
+    </AssociationSet>
+    <EntitySet Name="Admins" EntityType="HireDbModel.Admin" />
+  </EntityContainer>
+  <EntityType Name="Admin">
+    <Key>
+      <PropertyRef Name="AdminID" />
+    </Key>
+    <Property Name="AdminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+</Schema>
